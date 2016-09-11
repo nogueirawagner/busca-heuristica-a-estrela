@@ -15,7 +15,7 @@ namespace JogoBarbie.Utils
         /// 1 - Asfalto - Custo: 1; Cor: Cinza Escuro
         /// 3 - Terra - Custo: 3; Cor: Marrom
         /// 05 - Grama - Custo: 05; Cor: Verde
-        /// 10 - Paralelepipedo - Custo: 10; Cor: Cinza Claro 
+        /// 10 - Paralelepipedo - Custo: 10; Cor: Cinza Claro
         /// 15 - Amigo da Barbie - 
         /// </summary>
         public int[,] GeraMatriz()
