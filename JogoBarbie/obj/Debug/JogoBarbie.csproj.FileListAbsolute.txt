@@ -1,0 +1,8 @@
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\bin\Debug\JogoBarbie.exe.config
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\bin\Debug\JogoBarbie.exe
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\bin\Debug\JogoBarbie.pdb
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.MapaBarbie.resources
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.csproj.GenerateResource.Cache
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.exe
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.pdb
+c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.csprojResolveAssemblyReference.cache
