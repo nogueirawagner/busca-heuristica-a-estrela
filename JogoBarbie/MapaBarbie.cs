@@ -2,6 +2,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace JogoBarbie
 {
@@ -10,11 +12,6 @@ namespace JogoBarbie
         public MapaBarbie()
         {
             InitializeComponent();
-
-        }
-
-        private void btnInicial_Click(object sender, EventArgs e)
-        {
             var Desenha = new DesenhaMatriz();
             var matriz = Desenha.GeraMatriz();
 
@@ -72,5 +69,11 @@ namespace JogoBarbie
                 }
             }
         }
+
+        private void btnInicial_Click(object sender, EventArgs e)
+        {
+           
+        }
     }
 }
+
