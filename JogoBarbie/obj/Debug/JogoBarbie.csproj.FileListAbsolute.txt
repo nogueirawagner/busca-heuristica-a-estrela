@@ -6,3 +6,10 @@ c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\D
 c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.exe
 c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.pdb
 c:\users\wagno\documents\visual studio 2015\Projects\JogoBarbie\JogoBarbie\obj\Debug\JogoBarbie.csprojResolveAssemblyReference.cache
+D:\Busca-Heuristica-AEstrela\JogoBarbie\bin\Debug\JogoBarbie.exe.config
+D:\Busca-Heuristica-AEstrela\JogoBarbie\bin\Debug\JogoBarbie.exe
+D:\Busca-Heuristica-AEstrela\JogoBarbie\bin\Debug\JogoBarbie.pdb
+D:\Busca-Heuristica-AEstrela\JogoBarbie\obj\Debug\JogoBarbie.MapaBarbie.resources
+D:\Busca-Heuristica-AEstrela\JogoBarbie\obj\Debug\JogoBarbie.csproj.GenerateResource.Cache
+D:\Busca-Heuristica-AEstrela\JogoBarbie\obj\Debug\JogoBarbie.exe
+D:\Busca-Heuristica-AEstrela\JogoBarbie\obj\Debug\JogoBarbie.pdb
