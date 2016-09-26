@@ -1,22 +1,27 @@
 ﻿using JogoBarbie.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace JogoBarbie
 {
   public partial class MapaBarbie : Form
   {
+
+    int[,] matrizG;
+
     public MapaBarbie()
     {
       InitializeComponent();
       var Desenha = new DesenhaMatriz();
       var matriz = Desenha.GeraMatriz();
 
+      matrizG = matriz;
+
       int row, col;
 
+      #region
       for (col = 0; col < 42; col++)
       {
         for (row = 0; row < 42; row++)
@@ -68,6 +73,7 @@ namespace JogoBarbie
           }
         }
       }
+      #endregion
 
       //Pintar casa da Barbie
       var casaBarbie = new PictureBox
@@ -79,18 +85,28 @@ namespace JogoBarbie
       casaBarbie.Margin = new Padding(1);
     }
 
-    private static void VerificarProximoMovimento(int[,] PosicaoAtual)
+    private void VerificarProximoMovimento()
     {
       //Orientação: Norte, Sul, Leste, Oeste
 
-      //Verificar posição norte
+      matrizG = new int[23, 19];
+
+
+
+      var casaBarbie = new PictureBox
+      {
+        BackColor = Color.Red
+      };
+      tableLayoutPanel1.Controls.Add(casaBarbie, 23, 19);
+      casaBarbie.Dock = DockStyle.Fill;
+      casaBarbie.Margin = new Padding(1);
 
     }
 
 
     private void btnInicial_Click(object sender, EventArgs e)
     {
-
+      VerificarProximoMovimento();
     }
   }
 }
