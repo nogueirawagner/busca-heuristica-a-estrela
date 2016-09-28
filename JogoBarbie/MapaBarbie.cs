@@ -1,4 +1,5 @@
-﻿using JogoBarbie.Utils;
+﻿using JogoBarbie.Dominio;
+using JogoBarbie.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -88,6 +89,7 @@ namespace JogoBarbie
     private void VerificarProximoMovimento()
     {
       //Orientação: Norte, Sul, Leste, Oeste
+      
 
       matrizG = new int[23, 19];
 
