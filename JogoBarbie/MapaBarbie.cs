@@ -1,4 +1,5 @@
 ﻿using JogoBarbie.Dominio;
+using JogoBarbie.Dominio.Implementation;
 using JogoBarbie.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,8 @@ namespace JogoBarbie
   public partial class MapaBarbie : Form
   {
 
-    int[,] matrizG;
+    int[,] MatrizG;
+    List<Amigo> Amigos;
 
     public MapaBarbie()
     {
@@ -18,15 +20,19 @@ namespace JogoBarbie
       var Desenha = new DesenhaMatriz();
       var matriz = Desenha.GeraMatriz();
 
-      matrizG = matriz;
+      MatrizG = matriz;
 
-      int row, col;
+      var gerarAmigos = new Amigo();
+      Amigos = gerarAmigos.Amigos();
+
+      int row, col, i = 0;
 
       #region
       for (col = 0; col < 42; col++)
       {
         for (row = 0; row < 42; row++)
         {
+
           switch (matriz[row, col])
           {
             case 5:
@@ -63,6 +69,13 @@ namespace JogoBarbie
               tableLayoutPanel1.Controls.Add(pc, col, row);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
+              Amigo amigoPosicao;
+              if (i <= 5)
+              {
+                amigoPosicao = Amigos[i];
+                amigoPosicao.posicao = new int[col, row];
+              }
+              i++;
               break;
             default:
               pc = new PictureBox();
@@ -92,11 +105,11 @@ namespace JogoBarbie
 
       var linha = 23;
       var coluna = 19;
-      
 
-      matrizG = new int[linha, coluna];
+
+      MatrizG = new int[linha, coluna];
       var matrizY = new int[linha, coluna];
-      var distancia = PegaDistancia(matrizG, matrizY);
+      var distancia = PegaDistancia(MatrizG, matrizY);
 
 
       var casaBarbie = new PictureBox
@@ -111,15 +124,10 @@ namespace JogoBarbie
 
     private int PegaDistancia(int[,] matriz1, int[,] matriz2)
     {
-      var matriz = 0;
-      for (int i = 0; i < 1; i++)
-      {
-        for (int j = 0; j < 1; j++)
-        {
-          matriz = matriz1[i, j] - matriz2[i, j];
-        }
-      }
-      return matriz;
+
+
+      //  |Bx - Ax| + |By - Ay|
+      return 0;
     }
 
     private void btnInicial_Click(object sender, EventArgs e)
