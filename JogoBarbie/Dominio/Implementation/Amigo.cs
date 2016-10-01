@@ -9,17 +9,15 @@ namespace JogoBarbie.Dominio.Implementation
   public class Amigo
   {
     public bool aceita { get; set; }
-    public int[,] posicao { get; set; }
+    public Tuple<int, int> posicao { get; set; }
+    public bool jaAceitou { get; set; }
 
     public Amigo()
     {
       Amigos();
     }
 
-    public Amigo(bool Aceitar)
-    {
-
-    }
+    public Amigo(bool Aceitar) { }
 
     private List<Amigo> DefineAceitacao(List<Amigo> amigos)
     {
@@ -42,9 +40,7 @@ namespace JogoBarbie.Dominio.Implementation
         aindaNaoAceitaram[amigo].aceita = flag;
         DefineAceitacao(amigos);
       }
-
       return amigos;
-
     }
 
     public List<Amigo> Amigos()

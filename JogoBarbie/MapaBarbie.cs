@@ -1,7 +1,7 @@
-﻿using JogoBarbie.Dominio;
-using JogoBarbie.Dominio.Implementation;
+﻿using JogoBarbie.Dominio.Implementation;
 using JogoBarbie.Utils;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -13,6 +13,8 @@ namespace JogoBarbie
 
     int[,] MatrizG;
     List<Amigo> Amigos;
+    int Linha = 23;
+    int Coluna = 19;
 
     public MapaBarbie()
     {
@@ -21,6 +23,8 @@ namespace JogoBarbie
       var matriz = Desenha.GeraMatriz();
 
       MatrizG = matriz;
+
+
 
       var gerarAmigos = new Amigo();
       Amigos = gerarAmigos.Amigos();
@@ -33,54 +37,54 @@ namespace JogoBarbie
         for (row = 0; row < 42; row++)
         {
 
-          switch (matriz[row, col])
+          switch (matriz[col, row])
           {
             case 5:
               var pc = new PictureBox();
               pc.BackColor = Color.Green;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               break;
             case 10:
               pc = new PictureBox();
               pc.BackColor = Color.LightGray;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               break;
             case 00:
               pc = new PictureBox();
               pc.BackColor = Color.Orange;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               break;
             case 01:
               pc = new PictureBox();
               pc.BackColor = Color.Gray;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               break;
             case 15:
               pc = new PictureBox();
               pc.BackColor = Color.HotPink;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               Amigo amigoPosicao;
               if (i <= 5)
               {
                 amigoPosicao = Amigos[i];
-                amigoPosicao.posicao = new int[col, row];
+                amigoPosicao.posicao = new Tuple<int, int>(row, col);
               }
               i++;
               break;
             default:
               pc = new PictureBox();
               pc.BackColor = Color.Sienna;
-              tableLayoutPanel1.Controls.Add(pc, col, row);
+              tableLayoutPanel1.Controls.Add(pc, row, col);
               pc.Dock = DockStyle.Fill;
               pc.Margin = new Padding(1);
               break;
@@ -101,39 +105,144 @@ namespace JogoBarbie
 
     private void VerificarProximoMovimento()
     {
-      //Orientação: Norte, Sul, Leste, Oeste
+      var linha = Linha;
+      var coluna = Coluna;
 
-      var linha = 23;
-      var coluna = 19;
+      var distancia = PegaDistancia(linha, coluna);
 
+      var menor = 999999999;
+      var destino = "";
+      var custo = PegaCusto(linha, coluna);
 
-      MatrizG = new int[linha, coluna];
-      var matrizY = new int[linha, coluna];
-      var distancia = PegaDistancia(MatrizG, matrizY);
-
-
-      var casaBarbie = new PictureBox
+      if (custo.Count > 0)
       {
-        BackColor = Color.Red
-      };
-      tableLayoutPanel1.Controls.Add(casaBarbie, 23, 19);
-      casaBarbie.Dock = DockStyle.Fill;
-      casaBarbie.Margin = new Padding(1);
+        foreach (var dist in distancia)
+        {
+          foreach (var c in custo)
+          {
+            var gh = c.Item2 + dist.Item1;
+            if (menor > gh)
+            {
+              menor = gh;
+              destino = c.Item1;
+            }
+          }
+        }
+      }
 
+      Andar(destino, linha, coluna);
     }
 
-    private int PegaDistancia(int[,] matriz1, int[,] matriz2)
+    private void Andar(string destino, int linha, int coluna)
     {
+      switch (destino)
+      {
+        case "norte":
+          var caminha = new PictureBox
+          {
+            BackColor = Color.Red
+          };
+          tableLayoutPanel1.Controls.Add(caminha, coluna - 1, linha);
+          Coluna -= 1;
+          caminha.Dock = DockStyle.Fill;
+          caminha.Margin = new Padding(1);
+          break;
+        case "sul":
+          caminha = new PictureBox
+          {
+            BackColor = Color.Red
+          };
+          tableLayoutPanel1.Controls.Add(caminha, coluna + 1, linha);
+          Coluna += 1;
+          caminha.Dock = DockStyle.Fill;
+          caminha.Margin = new Padding(1);
+          break;
+        case "leste":
+          caminha = new PictureBox
+          {
+            BackColor = Color.Red
+          };
+          tableLayoutPanel1.Controls.Add(caminha, coluna, linha + 1);
+          Linha += 1;
+          caminha.Dock = DockStyle.Fill;
+          caminha.Margin = new Padding(1);
+          break;
+        case "oeste":
+          caminha = new PictureBox
+          {
+            BackColor = Color.Red
+          };
+          tableLayoutPanel1.Controls.Add(caminha, coluna, linha - 1);
+          Linha -= 1;
+          caminha.Dock = DockStyle.Fill;
+          caminha.Margin = new Padding(1);
+          break;
+      }
+    }
 
+    private List<Tuple<int, int>> PegaDistancia(int linha, int coluna)
+    {
+      var aX = linha;
+      var bX = coluna;
 
-      //  |Bx - Ax| + |By - Ay|
-      return 0;
+      //Verifica para cada amigo
+      var distancias = new List<Tuple<int, int>>();
+      int i = 0;
+      foreach (var amigo in Amigos)
+      {
+        var aY = amigo.posicao.Item1;
+        var bY = amigo.posicao.Item2;
+
+        //teorema de pitagoras
+        var distancia = Math.Pow(Math.Abs((bX - aX) ^ 2) + Math.Abs((bY - aY) ^ 2), 2);
+        var item = new Tuple<int, int>((int)distancia, i);
+        distancias.Add(item);
+        i++;
+      }
+      return distancias;
+    }
+
+    private List<Tuple<string, int>> PegaCusto(int linha, int coluna)
+    {
+      var custos = new List<Tuple<string, int>>();
+
+      var norte = MatrizG[coluna - 1, linha];
+      if (norte > 0)
+      {
+        var item = new Tuple<string, int>("norte", (int)norte);
+        custos.Add(item);
+      }
+
+      var sul = MatrizG[coluna + 1, linha];
+      if (sul > 0)
+      {
+        var item = new Tuple<string, int>("sul", (int)sul);
+        custos.Add(item);
+      }
+      var leste = MatrizG[coluna, linha + 1];
+      if (leste > 0)
+      {
+        var item = new Tuple<string, int>("leste", (int)leste);
+        custos.Add(item);
+      }
+      var oeste = MatrizG[coluna, linha - 1];
+      if (oeste > 0)
+      {
+        var item = new Tuple<string, int>("oeste", (int)oeste);
+        custos.Add(item);
+      }
+
+      return custos;
     }
 
     private void btnInicial_Click(object sender, EventArgs e)
     {
-      VerificarProximoMovimento();
+      var qtsAceitaram = Amigos.Count(s => s.jaAceitou);
+      while (qtsAceitaram < 3)
+      {
+        VerificarProximoMovimento();
+        qtsAceitaram = Amigos.Count(s => s.jaAceitou);
+      }
     }
   }
 }
-
