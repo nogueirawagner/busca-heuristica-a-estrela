@@ -237,6 +237,9 @@ namespace JogoBarbie
 
     private void btnInicial_Click(object sender, EventArgs e)
     {
+
+      //Verificar se ele já passou por aquele lugar, escolhe outra posicao.
+      //Verificar se a casa tem um amigo, e se tiver qual é o valor da propriedade aceita dele. Se for true setar jaAceitou true.
       var qtsAceitaram = Amigos.Count(s => s.jaAceitou);
       while (qtsAceitaram < 3)
       {
