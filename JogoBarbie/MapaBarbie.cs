@@ -10,7 +10,7 @@ namespace JogoBarbie
 {
   public partial class MapaBarbie : Form
   {
-
+    List<Tuple<int, int>> JaPassou = new List<Tuple<int, int>>();
     int[,] MatrizG;
     List<Amigo> Amigos;
     int Linha = 23;
@@ -21,10 +21,7 @@ namespace JogoBarbie
       InitializeComponent();
       var Desenha = new DesenhaMatriz();
       var matriz = Desenha.GeraMatriz();
-
       MatrizG = matriz;
-
-
 
       var gerarAmigos = new Amigo();
       Amigos = gerarAmigos.Amigos();
@@ -130,11 +127,37 @@ namespace JogoBarbie
         }
       }
 
-      Andar(destino, linha, coluna);
+      Andar(destino, linha, coluna, custo);
     }
 
-    private void Andar(string destino, int linha, int coluna)
+    private void VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
+      var jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha);
+      if (jaFoi)
+      {
+        var retiraCaminho = custo.First(s => s.Item1 == destino);
+        custo.Remove(retiraCaminho);
+        VerificarProximoMovimento();
+      }
+
+      switch (destino)
+      {
+        case "norte":
+          break;
+        case "sul":
+          break;
+        case "leste":
+          break;
+        case "oeste":
+          break;
+      }
+    }
+
+
+    private void Andar(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
+    {
+      VerificaSeJaFoiERecalculaRota(destino, linha, coluna, custo);
+
       switch (destino)
       {
         case "norte":
@@ -144,6 +167,8 @@ namespace JogoBarbie
           };
           tableLayoutPanel1.Controls.Add(caminha, coluna - 1, linha);
           Coluna -= 1;
+          var andou = new Tuple<int, int>(Coluna, Linha);
+          JaPassou.Add(andou);
           caminha.Dock = DockStyle.Fill;
           caminha.Margin = new Padding(1);
           break;
@@ -154,6 +179,8 @@ namespace JogoBarbie
           };
           tableLayoutPanel1.Controls.Add(caminha, coluna + 1, linha);
           Coluna += 1;
+          andou = new Tuple<int, int>(Coluna, Linha);
+          JaPassou.Add(andou);
           caminha.Dock = DockStyle.Fill;
           caminha.Margin = new Padding(1);
           break;
@@ -164,6 +191,8 @@ namespace JogoBarbie
           };
           tableLayoutPanel1.Controls.Add(caminha, coluna, linha + 1);
           Linha += 1;
+          andou = new Tuple<int, int>(Coluna, Linha);
+          JaPassou.Add(andou);
           caminha.Dock = DockStyle.Fill;
           caminha.Margin = new Padding(1);
           break;
@@ -174,6 +203,8 @@ namespace JogoBarbie
           };
           tableLayoutPanel1.Controls.Add(caminha, coluna, linha - 1);
           Linha -= 1;
+          andou = new Tuple<int, int>(Coluna, Linha);
+          JaPassou.Add(andou);
           caminha.Dock = DockStyle.Fill;
           caminha.Margin = new Padding(1);
           break;
