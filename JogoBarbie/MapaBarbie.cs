@@ -100,7 +100,7 @@ namespace JogoBarbie
       casaBarbie.Margin = new Padding(1);
     }
 
-    private void VerificarProximoMovimento()
+    private void VerificarProximoMovimento(List<Tuple<string, int>> custo = null)
     {
       var linha = Linha;
       var coluna = Coluna;
@@ -109,7 +109,9 @@ namespace JogoBarbie
 
       var menor = 999999999;
       var destino = "";
-      var custo = PegaCusto(linha, coluna);
+
+      if (custo != null)
+        custo = PegaCusto(linha, coluna);
 
       if (custo.Count > 0)
       {
@@ -132,12 +134,13 @@ namespace JogoBarbie
 
     private void VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
+
       var jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha);
       if (jaFoi)
       {
         var retiraCaminho = custo.First(s => s.Item1 == destino);
         custo.Remove(retiraCaminho);
-        VerificarProximoMovimento();
+        VerificarProximoMovimento(custo);
       }
 
       switch (destino)
@@ -156,11 +159,11 @@ namespace JogoBarbie
 
     private void Andar(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
-      VerificaSeJaFoiERecalculaRota(destino, linha, coluna, custo);
-
       switch (destino)
       {
         case "norte":
+          VerificaSeJaFoiERecalculaRota(destino, linha, coluna - 1, custo);
+
           var caminha = new PictureBox
           {
             BackColor = Color.Red
@@ -173,6 +176,8 @@ namespace JogoBarbie
           caminha.Margin = new Padding(1);
           break;
         case "sul":
+          VerificaSeJaFoiERecalculaRota(destino, linha, coluna + 1, custo);
+
           caminha = new PictureBox
           {
             BackColor = Color.Red
@@ -185,6 +190,8 @@ namespace JogoBarbie
           caminha.Margin = new Padding(1);
           break;
         case "leste":
+          VerificaSeJaFoiERecalculaRota(destino, linha + 1, coluna, custo);
+
           caminha = new PictureBox
           {
             BackColor = Color.Red
@@ -197,6 +204,8 @@ namespace JogoBarbie
           caminha.Margin = new Padding(1);
           break;
         case "oeste":
+          VerificaSeJaFoiERecalculaRota(destino, linha - 1, coluna, custo);
+
           caminha = new PictureBox
           {
             BackColor = Color.Red
