@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dominio\IAmigo.cs" />
     <Compile Include="Dominio\Implementation\Amigo.cs" />
     <Compile Include="MapaBarbie.cs">
       <SubType>Form</SubType>
