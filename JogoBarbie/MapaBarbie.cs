@@ -13,8 +13,8 @@ namespace JogoBarbie
     List<Tuple<int, int>> JaPassou = new List<Tuple<int, int>>();
     int[,] MatrizG;
     List<Amigo> Amigos;
-    int Linha = 23;
-    int Coluna = 19;
+    int Linha = 22;
+    int Coluna = 18;
 
     public MapaBarbie()
     {
@@ -29,9 +29,9 @@ namespace JogoBarbie
       int row, col, i = 0;
 
       #region
-      for (col = 1; col < 42; col++)
+      for (row = 0; row < 42; row++)
       {
-        for (row = 1; row < 42; row++)
+        for (col = 0; col < 42; col++)
         {
 
           switch (matriz[col, row])
@@ -78,6 +78,13 @@ namespace JogoBarbie
               }
               i++;
               break;
+            case 20:
+              pc = new PictureBox();
+              pc.BackColor = Color.Red;
+              tableLayoutPanel1.Controls.Add(pc, row, col);
+              pc.Dock = DockStyle.Fill;
+              pc.Margin = new Padding(1);
+              break;
             default:
               pc = new PictureBox();
               pc.BackColor = Color.Sienna;
@@ -91,13 +98,29 @@ namespace JogoBarbie
       #endregion
 
       //Pintar casa da Barbie
-      var casaBarbie = new PictureBox
-      {
-        BackColor = Color.Red
-      };
-      tableLayoutPanel1.Controls.Add(casaBarbie, 23, 19);
-      casaBarbie.Dock = DockStyle.Fill;
-      casaBarbie.Margin = new Padding(1);
+      //var casaBarbie = new PictureBox
+      //{
+      //  BackColor = Color.Red
+      //};
+      //var p = new Point
+      //{
+      //  X = 23,
+      //  Y = 19
+      //};
+
+      //var casaBarbie = tableLayoutPanel1.GetControlFromPosition(19, 23);
+      //var picBarbie = (PictureBox)casaBarbie;
+      //picBarbie.BackColor = Color.Red;
+
+
+
+      //tableLayoutPanel1.get Add(casaBarbie, 23, 19);
+      //casaBarbie.Dock = DockStyle.Fill;
+      //casaBarbie.Margin = new Padding(1);
+
+      //var casaBarbie2 = tableLayoutPanel1.GetControlFromPosition(20, 23);
+      //var picBarbie2 = (PictureBox)casaBarbie2;
+      //picBarbie2.BackColor = Color.Red;
     }
 
     private void VerificarProximoMovimento(List<Tuple<string, int>> custo = null)
@@ -109,6 +132,7 @@ namespace JogoBarbie
 
       var menor = 999999999;
       var destino = "";
+
       if (custo == null)
         custo = PegaCusto(linha, coluna);
 
@@ -133,58 +157,24 @@ namespace JogoBarbie
 
     private void VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
+
+      var jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha);
+      if (jaFoi)
+      {
+        var retiraCaminho = custo.First(s => s.Item1 == destino);
+        custo.Remove(retiraCaminho);
+        VerificarProximoMovimento(custo);
+      }
+
       switch (destino)
       {
         case "norte":
-
-          var jaFoi = JaPassou.Any(s => s.Item1 == coluna - 1 && s.Item2 == linha);
-          if (jaFoi)
-          {
-            var retiraCaminho = custo.First(s => s.Item1 == destino);
-            custo.Remove(retiraCaminho);
-            VerificarProximoMovimento(custo);
-          }
-
-          var andou = new Tuple<int, int>(Coluna - 1, Linha);
-          JaPassou.Add(andou);
           break;
         case "sul":
-
-          jaFoi = JaPassou.Any(s => s.Item1 == coluna + 1 && s.Item2 == linha);
-          if (jaFoi)
-          {
-            var retiraCaminho = custo.First(s => s.Item1 == destino);
-            custo.Remove(retiraCaminho);
-            VerificarProximoMovimento(custo);
-          }
-
-          andou = new Tuple<int, int>(Coluna + 1, Linha);
-          JaPassou.Add(andou);
           break;
         case "leste":
-
-          jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha + 1);
-          if (jaFoi)
-          {
-            var retiraCaminho = custo.First(s => s.Item1 == destino);
-            custo.Remove(retiraCaminho);
-            VerificarProximoMovimento(custo);
-          }
-          andou = new Tuple<int, int>(Coluna, Linha + 1);
-          JaPassou.Add(andou);
           break;
         case "oeste":
-
-          jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha - 1);
-          if (jaFoi)
-          {
-            var retiraCaminho = custo.First(s => s.Item1 == destino);
-            custo.Remove(retiraCaminho);
-            VerificarProximoMovimento(custo);
-          }
-
-          andou = new Tuple<int, int>(Coluna, Linha - 1);
-          JaPassou.Add(andou);
           break;
       }
     }
@@ -192,48 +182,75 @@ namespace JogoBarbie
 
     private void Andar(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
-      //VerificaSeJaFoiERecalculaRota(destino, linha, coluna, custo);
-
       switch (destino)
       {
         case "norte":
-          var caminha = new PictureBox
-          {
-            BackColor = Color.Red
-          };
-          tableLayoutPanel1.Controls.Add(caminha, linha, coluna - 1);
-          Coluna -= 1;
+          //VerificaSeJaFoiERecalculaRota(destino, linha, coluna - 1, custo);
 
-          caminha.Dock = DockStyle.Fill;
-          caminha.Margin = new Padding(1);
+          var caminha = tableLayoutPanel1.GetControlFromPosition(coluna - 1, linha);
+          var picBarbie = (PictureBox)caminha;
+          picBarbie.BackColor = Color.Red;
+
+          //var norte = new PictureBox
+          //{
+          //  BackColor = Color.Red
+          //};
+          //tableLayoutPanel1.Controls.Add(norte, linha, coluna - 1);
+          
+
+          //norte.Dock = DockStyle.Fill;
+          //norte.Margin = new Padding(1);
+
+          Coluna -= 1;
+          var andou = new Tuple<int, int>(Coluna, Linha);
+          JaPassou.Add(andou);
+
+
           break;
         case "sul":
-          caminha = new PictureBox
-          {
-            BackColor = Color.Red
-          };
-          tableLayoutPanel1.Controls.Add(caminha, linha, coluna + 1);
-          Coluna += 1;
-          caminha.Dock = DockStyle.Fill;
-          caminha.Margin = new Padding(1);
+          //VerificaSeJaFoiERecalculaRota(destino, linha, coluna + 1, custo);
+
+          caminha = tableLayoutPanel1.GetControlFromPosition(coluna + 1, linha);
+          picBarbie = (PictureBox)caminha;
+          picBarbie.BackColor = Color.Red;
+
           break;
         case "leste":
-          caminha = new PictureBox();
-          caminha.BackColor = Color.Red;
-          tableLayoutPanel1.Controls.Add(caminha, linha + 1, coluna);
-          Linha += 1;
-          caminha.Dock = DockStyle.Fill;
-          caminha.Margin = new Padding(1);
+          //VerificaSeJaFoiERecalculaRota(destino, linha + 1, coluna, custo);
+
+          caminha = tableLayoutPanel1.GetControlFromPosition(linha + 1, coluna);
+          picBarbie = (PictureBox)caminha;
+          picBarbie.BackColor = Color.Red;
+
+          //var leste = new PictureBox
+          //{
+          //  BackColor = Color.Red
+          //};
+          //tableLayoutPanel1.Controls.Add(leste, linha + 1, coluna);
+          //Linha += 1;
+          //andou = new Tuple<int, int>(Coluna, Linha);
+          //JaPassou.Add(andou);
+          //leste.Dock = DockStyle.Fill;
+          //leste.Margin = new Padding(1);
           break;
         case "oeste":
-          caminha = new PictureBox
-          {
-            BackColor = Color.Red
-          };
-          tableLayoutPanel1.Controls.Add(caminha, linha - 1, coluna);
-          Linha -= 1;
-          caminha.Dock = DockStyle.Fill;
-          caminha.Margin = new Padding(1);
+          //VerificaSeJaFoiERecalculaRota(destino, linha - 1, coluna, custo);
+
+
+          caminha = tableLayoutPanel1.GetControlFromPosition(coluna, linha - 1);
+          picBarbie = (PictureBox)caminha;
+          picBarbie.BackColor = Color.Red;
+
+          //var oeste = new PictureBox
+          //{
+          //  BackColor = Color.Red
+          //};
+          //tableLayoutPanel1.Controls.Add(oeste, linha - 1, coluna);
+          //Linha -= 1;
+          //andou = new Tuple<int, int>(Coluna, Linha);
+          //JaPassou.Add(andou);
+          //oeste.Dock = DockStyle.Fill;
+          //oeste.Margin = new Padding(1);
           break;
       }
       tableLayoutPanel1.Update();
@@ -265,26 +282,26 @@ namespace JogoBarbie
     {
       var custos = new List<Tuple<string, int>>();
 
-      var norte = MatrizG[coluna - 1, linha];
+      var norte = MatrizG[linha - 1, coluna];
       if (norte > 0)
       {
         var item = new Tuple<string, int>("norte", (int)norte);
         custos.Add(item);
       }
 
-      var sul = MatrizG[coluna + 1, linha];
+      var sul = MatrizG[linha + 1, coluna];
       if (sul > 0)
       {
         var item = new Tuple<string, int>("sul", (int)sul);
         custos.Add(item);
       }
-      var leste = MatrizG[coluna, linha + 1];
+      var leste = MatrizG[linha, coluna + 1];
       if (leste > 0)
       {
         var item = new Tuple<string, int>("leste", (int)leste);
         custos.Add(item);
       }
-      var oeste = MatrizG[coluna, linha - 1];
+      var oeste = MatrizG[linha, coluna - 1];
       if (oeste > 0)
       {
         var item = new Tuple<string, int>("oeste", (int)oeste);
@@ -304,8 +321,6 @@ namespace JogoBarbie
       {
         VerificarProximoMovimento();
         qtsAceitaram = Amigos.Count(s => s.jaAceitou);
-        
-        
       }
     }
   }
