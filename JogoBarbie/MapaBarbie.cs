@@ -132,13 +132,18 @@ namespace JogoBarbie
         }
       }
 
+      if (destino == "sul")
+      {
+      }
+
       if (VerificaSeJaFoiERecalculaRota(destino, linha, coluna, custo))
       {
         VerificarProximoMovimento(custo);
       }
 
-      Andar(destino, linha, coluna, custo);
-      
+      if (!(linha != Linha || coluna != Coluna)) // Se isso acontecer é pq ele andou quando recalculou a rota, então nao anda de novo.
+        Andar(destino, linha, coluna, custo);
+
     }
 
     private bool VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
@@ -293,34 +298,63 @@ namespace JogoBarbie
     {
       var custos = new List<Tuple<string, int>>();
 
-      var x = MatrizG[linha, coluna];
+      var linhaParede = 0;
+      var colunaParede = 0;
+      var norte = 0;
+      var sul = 0;
+      var leste = 0;
+      var oeste = 0;
 
-      //leste coluna + 1;
-      //oeste coluna - 1;
-      //norte linha + 1;
-      //sul linha - 1;
-
-
-      var norte = MatrizG[linha - 1, coluna];
+      if (linha == 0 && coluna == 0)
+        norte = MatrizG[linhaParede, colunaParede];
+      else if (linha == 0 && coluna != 0)
+        norte = MatrizG[linhaParede, coluna];
+      else if (linha != 0 && coluna == 0)
+        norte = MatrizG[linha - 1, colunaParede];
+      else
+        norte = MatrizG[linha - 1, coluna];
       if (norte > 0)
       {
         var item = new Tuple<string, int>("norte", (int)norte);
         custos.Add(item);
       }
 
-      var sul = MatrizG[linha + 1, coluna];
+      if (linha == 0 && coluna == 0)
+        sul = MatrizG[linhaParede, colunaParede];
+      else if (linha == 0 && coluna != 0)
+        sul = MatrizG[linhaParede, coluna];
+      else if (linha != 0 && coluna == 0)
+        sul = MatrizG[linha + 1, colunaParede];
+      else
+        sul = MatrizG[linha + 1, coluna];
       if (sul > 0)
       {
         var item = new Tuple<string, int>("sul", (int)sul);
         custos.Add(item);
       }
-      var leste = MatrizG[linha, coluna + 1];
+
+      if (linha == 0 && coluna == 0)
+        leste = MatrizG[linhaParede, colunaParede];
+      else if (linha == 0 && coluna != 0)
+        leste = MatrizG[linhaParede, coluna + 1];
+      else if (linha != 0 && coluna == 0)
+        leste = MatrizG[linha, colunaParede];
+      else
+        leste = MatrizG[linha, coluna + 1];
       if (leste > 0)
       {
         var item = new Tuple<string, int>("leste", (int)leste);
         custos.Add(item);
       }
-      var oeste = MatrizG[linha, coluna - 1];
+
+      if (linha == 0 && coluna == 0)
+        oeste = MatrizG[linhaParede, colunaParede];
+      else if (linha == 0 && coluna != 0)
+        oeste = MatrizG[linhaParede, coluna - 1];
+      else if (linha != 0 && coluna == 0)
+        oeste = MatrizG[linha, colunaParede];
+      else
+        oeste = MatrizG[linha, coluna - 1];
       if (oeste > 0)
       {
         var item = new Tuple<string, int>("oeste", (int)oeste);
