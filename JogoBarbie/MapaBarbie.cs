@@ -286,7 +286,7 @@ namespace JogoBarbie
         var bY = amigo.posicao.Item2;
 
         //teorema de pitagoras
-        var distancia = Math.Pow(Math.Abs((bX - aX) ^ 2) + Math.Abs((bY - aY) ^ 2), 2);
+        var distancia = Math.Ceiling(Math.Sqrt(Math.Pow(Math.Abs((aY - aX)), 2)  + Math.Pow(Math.Abs((bY - bX)), 2)));
         var item = new Tuple<int, int>((int)distancia, i);
         distancias.Add(item);
         i++;
