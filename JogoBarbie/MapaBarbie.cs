@@ -15,6 +15,7 @@ namespace JogoBarbie
     List<Amigo> Amigos;
     int Linha = 22;
     int Coluna = 18;
+    List<Tuple<int, int>> DistanciaAtual = new List<Tuple<int, int>>();
 
     public MapaBarbie()
     {
@@ -96,31 +97,6 @@ namespace JogoBarbie
         }
       }
       #endregion
-
-      //Pintar casa da Barbie
-      //var casaBarbie = new PictureBox
-      //{
-      //  BackColor = Color.Red
-      //};
-      //var p = new Point
-      //{
-      //  X = 23,
-      //  Y = 19
-      //};
-
-      //var casaBarbie = tableLayoutPanel1.GetControlFromPosition(19, 23);
-      //var picBarbie = (PictureBox)casaBarbie;
-      //picBarbie.BackColor = Color.Red;
-
-
-
-      //tableLayoutPanel1.get Add(casaBarbie, 23, 19);
-      //casaBarbie.Dock = DockStyle.Fill;
-      //casaBarbie.Margin = new Padding(1);
-
-      //var casaBarbie2 = tableLayoutPanel1.GetControlFromPosition(20, 23);
-      //var picBarbie2 = (PictureBox)casaBarbie2;
-      //picBarbie2.BackColor = Color.Red;
     }
 
     private void VerificarProximoMovimento(List<Tuple<string, int>> custo = null)
@@ -128,13 +104,17 @@ namespace JogoBarbie
       var linha = Linha;
       var coluna = Coluna;
 
-      var distancia = PegaDistancia(linha, coluna);
+
+      if (custo == null)
+      {
+        custo = PegaCusto(linha, coluna);
+        DistanciaAtual = PegaDistancia(linha, coluna);
+      }
+
+      var distancia = DistanciaAtual;
 
       var menor = 999999999;
       var destino = "";
-
-      if (custo == null)
-        custo = PegaCusto(linha, coluna);
 
       if (custo.Count > 0)
       {
@@ -152,105 +132,136 @@ namespace JogoBarbie
         }
       }
 
-      Andar(destino, linha, coluna, custo);
-    }
-
-    private void VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
-    {
-
-      var jaFoi = JaPassou.Any(s => s.Item1 == coluna && s.Item2 == linha);
-      if (jaFoi)
+      if (VerificaSeJaFoiERecalculaRota(destino, linha, coluna, custo))
       {
-        var retiraCaminho = custo.First(s => s.Item1 == destino);
-        custo.Remove(retiraCaminho);
         VerificarProximoMovimento(custo);
       }
 
-      switch (destino)
+      Andar(destino, linha, coluna, custo);
+      
+    }
+
+    private bool VerificaSeJaFoiERecalculaRota(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
+    {
+      //leste coluna + 1;
+      //oeste coluna - 1;
+      //norte linha + 1;
+      //sul linha - 1;
+
+      if (custo.Count > 1)
       {
-        case "norte":
-          break;
-        case "sul":
-          break;
-        case "leste":
-          break;
-        case "oeste":
-          break;
+        switch (destino)
+        {
+          case "norte":
+            //destino, linha - 1, coluna
+            var jaFoi = JaPassou.Any(s => s.Item1 == linha - 1 && s.Item2 == coluna);
+            if (jaFoi)
+            {
+              var retiraCaminho = custo.First(s => s.Item1 == destino);
+              custo.Remove(retiraCaminho);
+              return true;
+              // VerificarProximoMovimento(custo);
+            }
+            break;
+          case "sul":
+            //linha + 1, coluna
+            jaFoi = JaPassou.Any(s => s.Item1 == linha + 1 && s.Item2 == coluna);
+            if (jaFoi)
+            {
+              var retiraCaminho = custo.First(s => s.Item1 == destino);
+              custo.Remove(retiraCaminho);
+              return true;
+              //VerificarProximoMovimento(custo);
+            }
+            break;
+          case "leste":
+            //linha, coluna + 1
+            jaFoi = JaPassou.Any(s => s.Item1 == linha && s.Item2 == coluna + 1);
+            if (jaFoi)
+            {
+              var retiraCaminho = custo.First(s => s.Item1 == destino);
+              custo.Remove(retiraCaminho);
+              return true;
+              //VerificarProximoMovimento(custo);
+            }
+            break;
+          default:
+            //linha, coluna - 1
+            jaFoi = JaPassou.Any(s => s.Item1 == linha && s.Item2 == coluna - 1);
+            if (jaFoi)
+            {
+              var retiraCaminho = custo.First(s => s.Item1 == destino);
+              custo.Remove(retiraCaminho);
+              return true;
+              //VerificarProximoMovimento(custo);
+            }
+            break;
+        }
       }
+      return false;
     }
 
 
     private void Andar(string destino, int linha, int coluna, List<Tuple<string, int>> custo)
     {
+
+      //leste coluna + 1;
+      //oeste coluna - 1;
+      //norte linha - 1;
+      //sul linha + 1;
+
+      if (JaPassou.Count() == 0)
+      {
+        var casa = new Tuple<int, int>(Linha, Coluna);
+        JaPassou.Add(casa);
+      }
+
       switch (destino)
       {
         case "norte":
-          //VerificaSeJaFoiERecalculaRota(destino, linha, coluna - 1, custo);
+          //VerificaSeJaFoiERecalculaRota(destino, linha - 1, coluna, custo);
 
-          var caminha = tableLayoutPanel1.GetControlFromPosition(coluna - 1, linha);
+          var caminha = tableLayoutPanel1.GetControlFromPosition(coluna, linha - 1);
           var picBarbie = (PictureBox)caminha;
           picBarbie.BackColor = Color.Red;
+          Linha -= 1;
 
-          //var norte = new PictureBox
-          //{
-          //  BackColor = Color.Red
-          //};
-          //tableLayoutPanel1.Controls.Add(norte, linha, coluna - 1);
-          
-
-          //norte.Dock = DockStyle.Fill;
-          //norte.Margin = new Padding(1);
-
-          Coluna -= 1;
-          var andou = new Tuple<int, int>(Coluna, Linha);
+          var andou = new Tuple<int, int>(Linha, Coluna);
           JaPassou.Add(andou);
-
 
           break;
         case "sul":
+          //VerificaSeJaFoiERecalculaRota(destino, linha + 1, coluna, custo);
+
+          caminha = tableLayoutPanel1.GetControlFromPosition(coluna, linha + 1);
+          picBarbie = (PictureBox)caminha;
+          picBarbie.BackColor = Color.Red;
+          Linha += 1;
+
+          andou = new Tuple<int, int>(Linha, Coluna);
+          JaPassou.Add(andou);
+          break;
+        case "leste":
           //VerificaSeJaFoiERecalculaRota(destino, linha, coluna + 1, custo);
 
           caminha = tableLayoutPanel1.GetControlFromPosition(coluna + 1, linha);
           picBarbie = (PictureBox)caminha;
           picBarbie.BackColor = Color.Red;
+          Coluna += 1;
 
+          andou = new Tuple<int, int>(Linha, Coluna);
+          JaPassou.Add(andou);
           break;
-        case "leste":
-          //VerificaSeJaFoiERecalculaRota(destino, linha + 1, coluna, custo);
+        default:
+          //VerificaSeJaFoiERecalculaRota(destino, linha, coluna - 1, custo);
 
-          caminha = tableLayoutPanel1.GetControlFromPosition(linha + 1, coluna);
+          caminha = tableLayoutPanel1.GetControlFromPosition(coluna - 1, linha);
           picBarbie = (PictureBox)caminha;
           picBarbie.BackColor = Color.Red;
+          Coluna -= 1;
 
-          //var leste = new PictureBox
-          //{
-          //  BackColor = Color.Red
-          //};
-          //tableLayoutPanel1.Controls.Add(leste, linha + 1, coluna);
-          //Linha += 1;
-          //andou = new Tuple<int, int>(Coluna, Linha);
-          //JaPassou.Add(andou);
-          //leste.Dock = DockStyle.Fill;
-          //leste.Margin = new Padding(1);
-          break;
-        case "oeste":
-          //VerificaSeJaFoiERecalculaRota(destino, linha - 1, coluna, custo);
-
-
-          caminha = tableLayoutPanel1.GetControlFromPosition(coluna, linha - 1);
-          picBarbie = (PictureBox)caminha;
-          picBarbie.BackColor = Color.Red;
-
-          //var oeste = new PictureBox
-          //{
-          //  BackColor = Color.Red
-          //};
-          //tableLayoutPanel1.Controls.Add(oeste, linha - 1, coluna);
-          //Linha -= 1;
-          //andou = new Tuple<int, int>(Coluna, Linha);
-          //JaPassou.Add(andou);
-          //oeste.Dock = DockStyle.Fill;
-          //oeste.Margin = new Padding(1);
+          andou = new Tuple<int, int>(Linha, Coluna);
+          JaPassou.Add(andou);
           break;
       }
       tableLayoutPanel1.Update();
@@ -281,6 +292,14 @@ namespace JogoBarbie
     private List<Tuple<string, int>> PegaCusto(int linha, int coluna)
     {
       var custos = new List<Tuple<string, int>>();
+
+      var x = MatrizG[linha, coluna];
+
+      //leste coluna + 1;
+      //oeste coluna - 1;
+      //norte linha + 1;
+      //sul linha - 1;
+
 
       var norte = MatrizG[linha - 1, coluna];
       if (norte > 0)
